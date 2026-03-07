@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aja's big ghibli list</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Quicksand:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ── LIGHT THEME ──────────────────────────────── */
+    :root[data-theme="light"] {
+      --bg:                #FFF8F0;
+      --card-bg:           #ffffff;
+      --card-border:       #FFE0CC;
+      --text:              #4A3728;
+      --text-light:        #7A6358;
+      --accent:            #E8956D;
+      --accent-dark:       #d4845a;
+      --shadow:            rgba(74, 55, 40, 0.09);
+      --shadow-hover:      rgba(74, 55, 40, 0.18);
+      --header-bg:         linear-gradient(135deg, #FFDEC8 0%, #d4edda 50%, #BEE3F8 100%);
+      --intro-bg:          #ffffff;
+      --footer-bg:         linear-gradient(135deg, #FFE0CC, #C8E6C9);
+      --toggle-bg:         rgba(255,255,255,0.55);
+      --placeholder:       linear-gradient(135deg, #C8E6C9, #B3E5FC);
+      --placeholder-text:  #4A3728;
+      --modal-bg:          #ffffff;
+      --modal-close-bg:    #FFF8F0;
+      --modal-close-hover: #FFE0CC;
+      --label-color:       #E8956D;
+    }
+
+    /* ── DARK THEME ───────────────────────────────── */
+    :root[data-theme="dark"] {
+      --bg:                #13111a;
+      --card-bg:           #1e1b2e;
+      --card-border:       #3a2e4a;
+      --text:              #e8d8cc;
+      --text-light:        #9a8898;
+      --accent:            #e8956d;
+      --accent-dark:       #d4845a;
+      --shadow:            rgba(0, 0, 0, 0.4);
+      --shadow-hover:      rgba(0, 0, 0, 0.6);
+      --header-bg:         linear-gradient(135deg, #2a1f35 0%, #152a20 50%, #172538 100%);
+      --intro-bg:          #1e1b2e;
+      --footer-bg:         linear-gradient(135deg, #2a1f35, #152a20);
+      --toggle-bg:         rgba(255,255,255,0.1);
+      --placeholder:       linear-gradient(135deg, #1e3025, #1a2840);
+      --placeholder-text:  #9a8898;
+      --modal-bg:          #1e1b2e;
+      --modal-close-bg:    #13111a;
+      --modal-close-hover: #2e2440;
+      --label-color:       #c87a55;
+    }
+
+    /* ── BASE ─────────────────────────────────────── */
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* ── HEADER ───────────────────────────────────── */
+    header {
+      background: var(--header-bg);
+      text-align: center;
+      padding: 4rem 1.5rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -50px; left: -50px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .site-title {
+      font-family: 'Quicksand', sans-serif;
+      font-size: clamp(2rem, 6vw, 3.6rem);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .site-subtitle {
+      font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+      color: var(--text-light);
+      margin-top: 0.65rem;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── THEME TOGGLE ─────────────────────────────── */
+    .theme-toggle {
+      position: absolute;
+      top: 1.2rem; right: 1.2rem;
+      z-index: 10;
+      background: var(--toggle-bg);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      border-radius: 50px;
+      padding: 0.45rem 1rem;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s;
+      backdrop-filter: blur(6px);
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* ── MAIN ─────────────────────────────────────── */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem 5rem;
+    }
+
+    /* ── INTRO ────────────────────────────────────── */
+    .intro {
+      background: var(--intro-bg);
+      border-radius: 20px;
+      padding: 2rem 2.5rem;
+      margin: 2.5rem 0;
+      border-left: 5px solid var(--accent);
+      box-shadow: 0 4px 16px var(--shadow);
+      transition: background 0.3s;
+    }
+
+    .intro p {
+      font-size: 1.05rem;
+      color: var(--text-light);
+      line-height: 1.8;
+    }
+
+    .intro p + p { margin-top: 0.75rem; }
+
+    /* ── SECTION HEADINGS ─────────────────────────── */
+    .section-title {
+      font-family: 'Quicksand', sans-serif;
+      font-size: clamp(1.4rem, 3vw, 1.9rem);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(to right, var(--accent), transparent);
+      border-radius: 2px;
+    }
+
+    /* ── TOP PICKS ────────────────────────────────── */
+    .top-picks { margin: 2.5rem 0; }
+
+    .top-picks-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .top-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px var(--shadow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s;
+      border: 2px solid var(--card-border);
+      position: relative;
+    }
+
+    .top-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 10px 30px var(--shadow-hover);
+    }
+
+    .top-badge {
+      position: absolute;
+      top: 12px; left: 12px;
+      background: var(--accent);
+      color: white;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      z-index: 2;
+    }
+
+    .top-card .poster-wrap { height: 320px; }
+    .top-card .card-body { padding: 1.3rem 1.4rem 1.4rem; }
+    .top-card .card-title {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    /* ── ALL MOVIES ───────────────────────────────── */
+    .all-movies { margin: 2.5rem 0; }
+
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* ── SHARED CARD ──────────────────────────────── */
+    .movie-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px var(--shadow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s;
+    }
+
+    .movie-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 10px 30px var(--shadow-hover);
+    }
+
+    /* ── POSTER AREA ──────────────────────────────── */
+    .poster-wrap {
+      height: 260px;
+      overflow: hidden;
+      position: relative;
+      background: var(--placeholder);
+    }
+
+    .poster-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    /* placeholder shown while image loads */
+    .poster-wrap .ph {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--placeholder-text);
+      text-align: center;
+      padding: 1rem;
+      background: var(--placeholder);
+    }
+
+    /* ── CARD BODY ────────────────────────────────── */
+    .card-body { padding: 1.1rem 1.2rem 1.3rem; }
+
+    .card-title {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .card-year {
+      font-size: 0.83rem;
+      color: var(--text-light);
+      margin-top: 0.2rem;
+    }
+
+    .card-rating {
+      margin: 0.5rem 0;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+    }
+
+    .card-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--label-color);
+      margin-top: 0.8rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .card-note {
+      font-size: 0.86rem;
+      color: var(--text-light);
+      line-height: 1.55;
+    }
+
+    /* ── RANDOM BUTTON ────────────────────────────── */
+    .random-section {
+      text-align: center;
+      margin: 3rem 0;
+    }
+
+    .random-hint {
+      margin-bottom: 1rem;
+      color: var(--text-light);
+      font-size: 0.95rem;
+    }
+
+    .random-btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 1rem 2.8rem;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(232,149,109,0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .random-btn:hover {
+      transform: translateY(-2px) scale(1.04);
+      box-shadow: 0 6px 26px rgba(232,149,109,0.5);
+    }
+
+    .random-btn:active { transform: translateY(0) scale(0.98); }
+
+    /* ── MODAL ────────────────────────────────────── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: var(--modal-bg);
+      border-radius: 24px;
+      max-width: 400px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      animation: modalIn 0.2s ease;
+      transition: background 0.3s;
+    }
+
+    @keyframes modalIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to   { transform: scale(1);    opacity: 1; }
+    }
+
+    .modal-poster-wrap {
+      width: 100%;
+      height: 280px;
+      overflow: hidden;
+      background: var(--placeholder);
+      position: relative;
+    }
+
+    .modal-poster-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .modal-poster-wrap .ph {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--placeholder-text);
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .modal-body { padding: 1.5rem; }
+
+    .modal-title {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .modal-year  { color: var(--text-light); font-size: 0.9rem; margin-top: 0.2rem; }
+    .modal-rating { font-size: 1.2rem; margin: 0.6rem 0 0.3rem; }
+
+    .modal-comment {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      line-height: 1.65;
+      margin-top: 0.4rem;
+    }
+
+    .modal-close {
+      display: block;
+      width: 100%;
+      margin-top: 1.3rem;
+      padding: 0.75rem;
+      background: var(--modal-close-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 12px;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .modal-close:hover { background: var(--modal-close-hover); }
+
+    /* ── FOOTER ───────────────────────────────────── */
+    footer {
+      background: var(--footer-bg);
+      text-align: center;
+      padding: 2.2rem 1.5rem;
+      color: var(--text);
+    }
+
+    .footer-text {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .footer-sub {
+      font-size: 0.82rem;
+      color: var(--text-light);
+      margin-top: 0.35rem;
+    }
+
+    /* ── RESPONSIVE ───────────────────────────────── */
+    @media (max-width: 900px) {
+      .top-picks-grid { grid-template-columns: 1fr; }
+      .top-card .poster-wrap { height: 240px; }
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 2.8rem 1rem 2rem; }
+      .intro  { padding: 1.4rem 1.5rem; }
+      .movie-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+      <span id="themeIcon">☀️</span><span id="themeLabel">light mode</span>
+    </button>
+    <h1 class="site-title">aja's big ghibli list</h1>
+    <p class="site-subtitle">movies i love and recommend to my friends</p>
+  </header>
+
+  <main>
+
+    <section class="intro" aria-label="Introduction">
+      <p>hi! i made this page to share the studio ghibli films i love most and help my friends figure out which one to watch next. whether you're completely new to ghibli or looking for your next favorite, i hope you find something here.</p>
+      <p>each card has my honest thoughts and why i think you should give it a watch — and if you still can't decide, hit the button below to let fate choose for you!</p>
+    </section>
+
+    <!-- TOP PICKS -->
+    <section class="top-picks" aria-labelledby="top-picks-heading">
+      <h2 class="section-title" id="top-picks-heading">✨ my top picks</h2>
+      <div class="top-picks-grid">
+
+        <article class="top-card" tabindex="0">
+          <span class="top-badge">top pick</span>
+          <div class="poster-wrap">
+            <div class="ph">The Secret World of Arrietty</div>
+            <img src="https://upload.wikimedia.org/wikipedia/en/e/e7/Karigurashi_no_Arrietty_poster.png"
+                 alt="The Secret World of Arrietty movie poster"
+                 onload="this.style.opacity=1"
+                 onerror="this.remove()" />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">The Secret World of Arrietty</h3>
+            <p class="card-year">2010</p>
+            <p class="card-rating">⭐⭐⭐⭐⭐</p>
+            <p class="card-note">tiny people living beneath a family's floorboards — the world-building is incredible and every little detail is lovingly crafted. it makes the ordinary world feel magical and vast.</p>
+          </div>
+        </article>
+
+        <article class="top-card" tabindex="0">
+          <span class="top-badge">top pick</span>
+          <div class="poster-wrap">
+            <div class="ph">Howl's Moving Castle</div>
+            <img src="https://upload.wikimedia.org/wikipedia/en/a/a0/Howls-moving-castleposter.jpg"
+                 alt="Howl's Moving Castle movie poster"
+                 onload="this.style.opacity=1"
+                 onerror="this.remove()" />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Howl's Moving Castle</h3>
+            <p class="card-year">2004</p>
+            <p class="card-rating">⭐⭐⭐⭐⭐</p>
+            <p class="card-note">a girl cursed to look old finds refuge in a wizard's magical moving castle. romantic, dreamy, and visually gorgeous — sophie's quiet inner strength is everything.</p>
+          </div>
+        </article>
+
+        <article class="top-card" tabindex="0">
+          <span class="top-badge">top pick</span>
+          <div class="poster-wrap">
+            <div class="ph">Kiki's Delivery Service</div>
+            <img src="https://upload.wikimedia.org/wikipedia/en/0/07/Kiki%27s_Delivery_Service_%28Movie%29.jpg"
+                 alt="Kiki's Delivery Service movie poster"
+                 onload="this.style.opacity=1"
+                 onerror="this.remove()" />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Kiki's Delivery Service</h3>
+            <p class="card-year">1989</p>
+            <p class="card-rating">⭐⭐⭐⭐⭐</p>
+            <p class="card-note">a young witch finds her way in a new city. this film is all about independence, self-doubt, and rediscovering your creative spark. i always come back to this one.</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- RANDOM PICK -->
+    <section class="random-section" aria-label="Random movie picker">
+      <p class="random-hint">can't decide what to watch?</p>
+      <button class="random-btn" onclick="pickRandom()">✨ pick a random ghibli movie</button>
+    </section>
+
+    <!-- ALL MOVIES -->
+    <section class="all-movies" aria-labelledby="all-movies-heading">
+      <h2 class="section-title" id="all-movies-heading">all my recommendations</h2>
+      <div class="movie-grid">
+
+        <article class="movie-card" tabindex="0">
+          <div class="poster-wrap">
+            <div class="ph">Kiki's Delivery Service</div>
+            <img src="https://upload.wikimedia.org/wikipedia/en/0/07/Kiki%27s_Delivery_Service_%28Movie%29.jpg" alt="Kiki's Delivery Service poster" onload="this.style.opacity=1" onerror="this.remove()" />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Kiki's Delivery Service</h3>
+            <p class="card-year">1989</p>
+            <p class="card-rating">⭐⭐⭐⭐⭐</p>
+            <p class="card-label">my thoughts</p>
+            <p class="card-note">a young witch finds her way in a new city — all about independence, self-doubt, and finding your creative spark again.</p>
+            <p class="card-label">why i recommend it</p>
+            <p class="card-note">if you've ever felt lost or unsure of yourself, kiki's journey will feel so personal and encouraging.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" tabindex="0">
+          <div class="poster-wrap">
+            <div class="ph">Porco Rosso</div>
+            <img src="https://upload.wikimedia.org/wikipedia/en/f/fc/Porco_Rosso_%28Movie_Poster%29.jpg" alt="Porco Rosso poster" onload="this.style.opacity=1" onerror="this.remove()" />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Porco Rosso</h3>
+            <p class="card-year">1992</p>
+            <p class="card-rating">⭐⭐⭐⭐</p>
+            <p class="card-label">my thoughts</p>
+            <p class="card-note">a world-weary pilot who's been turned into a pig flies around the adriatic. melancholic and surprisingly funny.</p>
+            <p class="card-label">why i recommend it</p>
+            <p class="card-note">one of miyazaki's most personal films. the vibe is completely unique — like jazz and nostalgia in movie form.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" tabindex="0">
+          <div class="poster-wrap">
+            <div class="ph">Pom Poko</div>
+            <img src="https://upload.wikimedia.org/wikipedia/en/6/68/Pompokoposter.jpg" alt="Pom Poko poster" onload="this.style.opacity=1" onerror="this.remove()" />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Pom Poko</h3>
+            <p class="card-year">1994</p>
+            <p class="card-rating">⭐⭐⭐⭐</p>
+            <p class="card-label">my thoughts</p>
+            <p class="card-note">a wild, funny, and surprisingly heartbreaking story about raccoon dogs fighting to save their forest.</p>
+            <p class="card-label">why i recommend it</p>
+            <p class="card-note">it's unlike anything else ghibli made — hilarious and then suddenly devastating. unforgettable.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" tabindex="0">
+          <div class="poster-wrap">
+            <div class="ph">Whisper of the Heart</div>
+            <img src="https://upload.wikimedia.org/wikipedia/en/9/93/Whisper_of_the_Heart_%28Movie_Poster%29.jpg" alt="Whisper of the Heart poster" onload="this.style.opacity=1" onerror="this.remove()" />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Whisper of the Heart</h3>
+            <p class="card-year">1995</p>
+            <p class="card-rating">⭐⭐⭐⭐⭐</p>
+            <p class="card-label">my thoughts</p>
+            <p class="card-note">a girl discovers her love of writing while chasing a mysterious boy she keeps running into at the library.</p>
+            <p class="card-label">why i recommend it</p>
+            <p class="card-note">the most grounded and human ghibli film. perfect for anyone who loves books, art, or has ever had a dream.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" tabindex="0">
+          <div class="poster-wrap">
+            <div class="ph">Spirited Away</div>
+            <img src="https://upload.wikimedia.org/wikipedia/en/d/db/Spirited_Away_Japanese_poster.png" alt="Spirited Away poster" onload="this.style.opacity=1" onerror="this.remove()" />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Spirited Away</h3>
+            <p class="card-year">2001</p>
+            <p class="card-rating">⭐⭐⭐⭐⭐</p>
+            <p class="card-label">my thoughts</p>
+            <p class="card-note">a girl gets trapped in a spirit world and must work to save her parents. visually stunning and deeply imaginative.</p>
+            <p class="card-label">why i recommend it</p>
+            <p class="card-note">the most famous ghibli film for a reason — it's a masterpiece. watch it first if you're new to ghibli.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" tabindex="0">
+          <div class="poster-wrap">
+            <div class="ph">Howl's Moving Castle</div>
+            <img src="https://upload.wikimedia.org/wikipedia/en/a/a0/Howls-moving-castleposter.jpg" alt="Howl's Moving Castle poster" onload="this.style.opacity=1" onerror="this.remove()" />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Howl's Moving Castle</h3>
+            <p class="card-year">2004</p>
+            <p class="card-rating">⭐⭐⭐⭐⭐</p>
+            <p class="card-label">my thoughts</p>
+            <p class="card-note">a girl cursed to look old finds refuge in a wizard's magical moving castle. romantic, dreamy, and visually gorgeous.</p>
+            <p class="card-label">why i recommend it</p>
+            <p class="card-note">sophie's inner strength is so quietly powerful. the castle, calcifer, the war — everything is magical.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" tabindex="0">
+          <div class="poster-wrap">
+            <div class="ph">Ponyo</div>
+            <img src="https://upload.wikimedia.org/wikipedia/en/5/51/Ponyo.png" alt="Ponyo poster" onload="this.style.opacity=1" onerror="this.remove()" />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Ponyo</h3>
+            <p class="card-year">2008</p>
+            <p class="card-rating">⭐⭐⭐⭐</p>
+            <p class="card-label">my thoughts</p>
+            <p class="card-note">a little fish-girl wants to become human to stay with a boy she met on the shore. joyful and completely charming.</p>
+            <p class="card-label">why i recommend it</p>
+            <p class="card-note">the most childlike and pure ghibli film. perfect for when you need pure, uncomplicated joy in your life.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" tabindex="0">
+          <div class="poster-wrap">
+            <div class="ph">The Secret World of Arrietty</div>
+            <img src="https://upload.wikimedia.org/wikipedia/en/e/e7/Karigurashi_no_Arrietty_poster.png" alt="The Secret World of Arrietty poster" onload="this.style.opacity=1" onerror="this.remove()" />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">The Secret World of Arrietty</h3>
+            <p class="card-year">2010</p>
+            <p class="card-rating">⭐⭐⭐⭐⭐</p>
+            <p class="card-label">my thoughts</p>
+            <p class="card-note">tiny people living beneath a family's floorboards — the world-building is incredible and every tiny detail is lovingly crafted.</p>
+            <p class="card-label">why i recommend it</p>
+            <p class="card-note">it makes the mundane world feel magical and vast. one of the most beautifully designed ghibli films.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" tabindex="0">
+          <div class="poster-wrap">
+            <div class="ph">From Up on Poppy Hill</div>
+            <img src="https://upload.wikimedia.org/wikipedia/en/c/c9/From_Up_on_Poppy_Hill.png" alt="From Up on Poppy Hill poster" onload="this.style.opacity=1" onerror="this.remove()" />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">From Up on Poppy Hill</h3>
+            <p class="card-year">2011</p>
+            <p class="card-rating">⭐⭐⭐⭐</p>
+            <p class="card-label">my thoughts</p>
+            <p class="card-note">a girl and boy work together to save their school's clubhouse while uncovering a complicated family secret.</p>
+            <p class="card-label">why i recommend it</p>
+            <p class="card-note">understated and sweet — a quieter ghibli film about history, community, and gentle first love.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" tabindex="0">
+          <div class="poster-wrap">
+            <div class="ph">The Wind Rises</div>
+            <img src="https://upload.wikimedia.org/wikipedia/en/a/a3/Kaze_Tachinu_poster.jpg" alt="The Wind Rises poster" onload="this.style.opacity=1" onerror="this.remove()" />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">The Wind Rises</h3>
+            <p class="card-year">2013</p>
+            <p class="card-rating">⭐⭐⭐⭐⭐</p>
+            <p class="card-label">my thoughts</p>
+            <p class="card-note">a fictionalized life of the engineer who designed the zero fighter plane. beautiful, melancholic, and deeply personal.</p>
+            <p class="card-label">why i recommend it</p>
+            <p class="card-note">miyazaki's farewell to animation (at the time). if you want something more adult and reflective, this is it.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" tabindex="0">
+          <div class="poster-wrap">
+            <div class="ph">The Boy and the Heron</div>
+            <img src="https://upload.wikimedia.org/wikipedia/en/4/41/How_Do_You_Live_poster.jpg" alt="The Boy and the Heron poster" onload="this.style.opacity=1" onerror="this.remove()" />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">The Boy and the Heron</h3>
+            <p class="card-year">2023</p>
+            <p class="card-rating">⭐⭐⭐⭐⭐</p>
+            <p class="card-label">my thoughts</p>
+            <p class="card-note">a boy is drawn into a mysterious tower and an otherworldly realm after losing his mother. surreal and deeply layered.</p>
+            <p class="card-label">why i recommend it</p>
+            <p class="card-note">miyazaki's grand return after a decade — dense and personal. best appreciated after seeing other ghibli films first.</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p class="footer-text">made with love for my friends ♡</p>
+    <p class="footer-sub">all films by studio ghibli</p>
+  </footer>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true"
+       aria-labelledby="modalTitle" onclick="handleOverlayClick(event)">
+    <div class="modal">
+      <div class="modal-poster-wrap" id="modalPosterWrap"></div>
+      <div class="modal-body">
+        <h2 class="modal-title"   id="modalTitle"></h2>
+        <p  class="modal-year"    id="modalYear"></p>
+        <p  class="modal-rating"  id="modalRating"></p>
+        <p  class="modal-comment" id="modalComment"></p>
+        <button class="modal-close" onclick="closeModal()">close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── MOVIES DATA ────────────────────────────────
+    const movies = [
+      {
+        title: "Kiki's Delivery Service", year: "1989", rating: "⭐⭐⭐⭐⭐",
+        poster: "https://upload.wikimedia.org/wikipedia/en/0/07/Kiki%27s_Delivery_Service_%28Movie%29.jpg",
+        comment: "a young witch finds her way in a new city. all about independence, self-doubt, and finding your creative spark again. if you've ever felt lost, kiki's journey will feel so personal."
+      },
+      {
+        title: "Porco Rosso", year: "1992", rating: "⭐⭐⭐⭐",
+        poster: "https://upload.wikimedia.org/wikipedia/en/f/fc/Porco_Rosso_%28Movie_Poster%29.jpg",
+        comment: "a world-weary pilot turned into a pig flies around the adriatic. melancholic, funny, and completely its own thing — like jazz and nostalgia in movie form."
+      },
+      {
+        title: "Pom Poko", year: "1994", rating: "⭐⭐⭐⭐",
+        poster: "https://upload.wikimedia.org/wikipedia/en/6/68/Pompokoposter.jpg",
+        comment: "raccoon dogs fight to save their forest — wild, funny, and then suddenly heartbreaking. unlike anything else ghibli made. unforgettable."
+      },
+      {
+        title: "Whisper of the Heart", year: "1995", rating: "⭐⭐⭐⭐⭐",
+        poster: "https://upload.wikimedia.org/wikipedia/en/9/93/Whisper_of_the_Heart_%28Movie_Poster%29.jpg",
+        comment: "the most grounded and human ghibli film. a girl discovers her love of writing while chasing a boy she keeps running into. perfect for anyone who has ever had a dream."
+      },
+      {
+        title: "Spirited Away", year: "2001", rating: "⭐⭐⭐⭐⭐",
+        poster: "https://upload.wikimedia.org/wikipedia/en/d/db/Spirited_Away_Japanese_poster.png",
+        comment: "visually stunning and deeply imaginative — the most famous ghibli film for a reason. it's a masterpiece. watch this first if you're new to ghibli."
+      },
+      {
+        title: "Howl's Moving Castle", year: "2004", rating: "⭐⭐⭐⭐⭐",
+        poster: "https://upload.wikimedia.org/wikipedia/en/a/a0/Howls-moving-castleposter.jpg",
+        comment: "romantic, dreamy, and visually gorgeous. sophie's quiet inner strength is everything — and calcifer is the best fire demon in cinema."
+      },
+      {
+        title: "Ponyo", year: "2008", rating: "⭐⭐⭐⭐",
+        poster: "https://upload.wikimedia.org/wikipedia/en/5/51/Ponyo.png",
+        comment: "the most joyful and childlike ghibli film. a little fish-girl wants to become human. perfect for when you need pure, uncomplicated happiness."
+      },
+      {
+        title: "The Secret World of Arrietty", year: "2010", rating: "⭐⭐⭐⭐⭐",
+        poster: "https://upload.wikimedia.org/wikipedia/en/e/e7/Karigurashi_no_Arrietty_poster.png",
+        comment: "tiny people beneath the floorboards — the world-building is incredible and makes the ordinary world feel magical and vast. one of the most beautifully designed ghibli films."
+      },
+      {
+        title: "From Up on Poppy Hill", year: "2011", rating: "⭐⭐⭐⭐",
+        poster: "https://upload.wikimedia.org/wikipedia/en/c/c9/From_Up_on_Poppy_Hill.png",
+        comment: "understated and sweet — a quieter ghibli film about history, community, and gentle first love. a lovely sunday afternoon watch."
+      },
+      {
+        title: "The Wind Rises", year: "2013", rating: "⭐⭐⭐⭐⭐",
+        poster: "https://upload.wikimedia.org/wikipedia/en/a/a3/Kaze_Tachinu_poster.jpg",
+        comment: "miyazaki's farewell to animation (at the time) — beautiful, melancholic, and deeply personal. for when you want something more adult and reflective."
+      },
+      {
+        title: "The Boy and the Heron", year: "2023", rating: "⭐⭐⭐⭐⭐",
+        poster: "https://upload.wikimedia.org/wikipedia/en/4/41/How_Do_You_Live_poster.jpg",
+        comment: "miyazaki's grand return after a decade — surreal, layered, and deeply personal. best appreciated after you've seen other ghibli films first."
+      }
+    ];
+
+    // ── RANDOM PICKER ──────────────────────────────
+    function pickRandom() {
+      const movie     = movies[Math.floor(Math.random() * movies.length)];
+      const posterWrap = document.getElementById('modalPosterWrap');
+
+      document.getElementById('modalTitle').textContent   = movie.title;
+      document.getElementById('modalYear').textContent    = movie.year;
+      document.getElementById('modalRating').textContent  = movie.rating;
+      document.getElementById('modalComment').textContent = movie.comment;
+
+      posterWrap.innerHTML = `<div class="ph">${movie.title}</div><img src="${movie.poster}" alt="${movie.title} poster" onload="this.style.opacity=1" onerror="this.remove()" />`;
+
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function handleOverlayClick(e) {
+      if (e.target === document.getElementById('modalOverlay')) closeModal();
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // ── THEME TOGGLE ───────────────────────────────
+    const root       = document.documentElement;
+    const themeIcon  = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+
+    function applyTheme(theme) {
+      root.setAttribute('data-theme', theme);
+      themeIcon.textContent  = theme === 'dark' ? '☀️' : '🌙';
+      themeLabel.textContent = theme === 'dark' ? 'light mode' : 'dark mode';
+      localStorage.setItem('ghibli-theme', theme);
+    }
+
+    function toggleTheme() {
+      applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    }
+
+    applyTheme(localStorage.getItem('ghibli-theme') || 'dark');
+  </script>
+
+</body>
+</html>
