@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aja's big ghibli list</title>
+  <script>
+    document.documentElement.setAttribute(
+      'data-theme',
+      localStorage.getItem('ghibli-theme') || 'dark'
+    );
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Quicksand:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── LIGHT THEME ──────────────────────────────── */
+    :root[data-theme="light"] {
+      --bg:                #eef2e6;
+      --card-bg:           #f7f9f1;
+      --card-border:       #A9B6C4;
+      --text:              #243C2C;
+      --text-light:        #59789F;
+      --accent:            #7A9445;
+      --accent-dark:       #5d7234;
+      --shadow:            rgba(36,60,44,0.10);
+      --shadow-hover:      rgba(36,60,44,0.22);
+      --header-bg:         linear-gradient(135deg,#ECE69D 0%,#c8dab0 45%,#A9B6C4 100%);
+      --intro-bg:          #f7f9f1;
+      --footer-bg:         linear-gradient(135deg,#ECE69D,#A9B6C4);
+      --toggle-bg:         rgba(255,255,255,0.6);
+      --toggle-border:     rgba(36,60,44,0.2);
+      --placeholder:       linear-gradient(135deg,#A9B6C4,#ECE69D);
+      --placeholder-text:  #243C2C;
+      --modal-bg:          #f7f9f1;
+      --modal-close-bg:    #eef2e6;
+      --modal-close-hover: #dce8c8;
+      --label-color:       #7A9445;
+      --sort-bg:           #f7f9f1;
+      --sort-active-bg:    #7A9445;
+      --sort-active-text:  #ffffff;
+      --expand-btn-bg:     #eef2e6;
+    }
+
+    /* ── DARK THEME ───────────────────────────────── */
+    :root[data-theme="dark"] {
+      --bg:                #0a2018;
+      --card-bg:           #0A3323;
+      --card-border:       #1a5040;
+      --text:              #F7F4D5;
+      --text-light:        #b5b28e;
+      --accent:            #D3968C;
+      --accent-dark:       #b87d73;
+      --shadow:            rgba(0,0,0,0.45);
+      --shadow-hover:      rgba(0,0,0,0.70);
+      --header-bg:         linear-gradient(180deg,#040e09 0%,#0a2018 45%,#105666 100%);
+      --intro-bg:          #0A3323;
+      --footer-bg:         linear-gradient(135deg,#040e09,#0a2018);
+      --toggle-bg:         rgba(247,244,213,0.1);
+      --toggle-border:     rgba(247,244,213,0.2);
+      --placeholder:       linear-gradient(135deg,#0A3323,#105666);
+      --placeholder-text:  #b5b28e;
+      --modal-bg:          #0A3323;
+      --modal-close-bg:    #040e09;
+      --modal-close-hover: #105666;
+      --label-color:       #D3968C;
+      --sort-bg:           #0A3323;
+      --sort-active-bg:    #D3968C;
+      --sort-active-text:  #F7F4D5;
+      --expand-btn-bg:     #040e09;
+    }
+
+    /* ── BASE ─────────────────────────────────────── */
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* ── HEADER ───────────────────────────────────── */
+    header {
+      background: var(--header-bg);
+      text-align: center;
+      padding: 4rem 1.5rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -50px; left: -50px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .site-title {
+      font-family: 'Quicksand', sans-serif;
+      font-size: clamp(2rem, 6vw, 3.6rem);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      position: relative; z-index: 1;
+    }
+
+    .site-subtitle {
+      font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+      color: var(--text-light);
+      margin-top: 0.65rem;
+      font-weight: 600;
+      position: relative; z-index: 1;
+    }
+
+    /* ── DECORATIVE SOOT SPRITES ──────────────────── */
+    .header-soot {
+      position: absolute;
+      pointer-events: none;
+      z-index: 0;
+      animation: sootFloat var(--sdur,4s) ease-in-out infinite alternate,
+                 sootBreathe var(--sbdur,3s) ease-in-out infinite alternate;
+      animation-delay: var(--sdelay,0s);
+    }
+    @keyframes sootFloat {
+      from { transform: translateY(0)     rotate(-4deg) scale(var(--sscale,1)); }
+      to   { transform: translateY(-10px) rotate(5deg)  scale(calc(var(--sscale,1) * 1.12)); }
+    }
+    @keyframes sootBreathe {
+      from { opacity: 0.72; }
+      to   { opacity: 1; }
+    }
+
+    /* ── DECORATIVE STARS ─────────────────────────── */
+    .deco-star {
+      position: absolute;
+      pointer-events: none;
+      z-index: 0;
+      font-weight: 900;
+      line-height: 1;
+      animation: floatStar var(--dur, 4s) ease-in-out infinite alternate;
+      animation-delay: var(--delay, 0s);
+    }
+
+    @keyframes floatStar {
+      from { transform: translateY(0) rotate(-8deg); opacity: 0.55; }
+      to   { transform: translateY(-13px) rotate(14deg); opacity: 0.95; }
+    }
+
+    /* ── THEME TOGGLE ─────────────────────────────── */
+    .theme-toggle {
+      position: absolute;
+      top: 1.2rem; right: 1.2rem;
+      z-index: 10;
+      background: var(--toggle-bg);
+      border: 1.5px solid var(--toggle-border);
+      padding: 0.45rem 1rem;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.85rem; font-weight: 700;
+      color: var(--text);
+      cursor: pointer;
+      display: flex; align-items: center; gap: 0.4rem;
+      backdrop-filter: blur(6px);
+      transition: background 0.2s;
+    }
+
+    .theme-toggle:hover { background: rgba(255,255,255,0.22); }
+
+    /* ── MAIN ─────────────────────────────────────── */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem 5rem;
+    }
+
+    /* ── INTRO ────────────────────────────────────── */
+    .intro {
+      background: var(--intro-bg);
+      padding: 2rem 2.5rem;
+      margin: 2.5rem 0;
+      border-left: 5px solid var(--accent);
+      box-shadow: 0 4px 16px var(--shadow);
+      transition: background 0.3s;
+    }
+
+    .intro p { font-size: 1.05rem; color: var(--text-light); line-height: 1.8; }
+    .intro p + p { margin-top: 0.75rem; }
+
+    /* ── SECTION HEADINGS ─────────────────────────── */
+    .section-title {
+      font-family: 'Quicksand', sans-serif;
+      font-size: clamp(1.4rem, 3vw, 1.9rem);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1; height: 2px;
+      background: linear-gradient(to right, var(--accent), transparent);
+    }
+
+    /* ── TOP PICKS ────────────────────────────────── */
+    .top-picks { margin: 2.5rem 0; }
+
+    .top-picks-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 1.5rem;
+    }
+
+    .top-card {
+      background: var(--card-bg);
+      box-shadow: 0 4px 16px var(--shadow);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.3s;
+      border: 2px solid var(--card-border);
+      position: relative;
+    }
+
+    .top-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 14px 36px var(--shadow-hover);
+    }
+
+    .top-card:hover .poster-wrap img { transform: scale(1.06); }
+
+    .top-badge {
+      position: absolute;
+      top: 12px; left: 12px;
+      background: var(--accent); color: white;
+      font-size: 0.68rem; font-weight: 700;
+      padding: 0.3rem 0.75rem;
+      text-transform: uppercase; letter-spacing: 0.6px;
+      z-index: 2;
+    }
+
+    .top-card .card-body { padding: 1.2rem 1.4rem 1.4rem; }
+
+    .top-card .card-title {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.12rem; font-weight: 700;
+    }
+
+    /* ── POSTER AREA — 2:3 portrait ratio ─────────── */
+    .poster-wrap {
+      aspect-ratio: 2 / 3;
+      overflow: hidden;
+      position: relative;
+      background: var(--placeholder);
+    }
+
+    .poster-wrap .ph {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.92rem; font-weight: 700;
+      color: var(--placeholder-text);
+      text-align: center; padding: 1rem;
+    }
+
+    .poster-wrap img {
+      position: relative; z-index: 1;
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      transition: transform 0.35s ease;
+    }
+
+    /* ── ALL MOVIES ───────────────────────────────── */
+    .all-movies { margin: 2.5rem 0; }
+
+    /* ── SORT CONTROLS ────────────────────────────── */
+    .sort-bar {
+      display: flex; align-items: center;
+      gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;
+    }
+
+    .sort-label {
+      font-size: 0.82rem; font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase; letter-spacing: 0.6px;
+      margin-right: 0.3rem;
+    }
+
+    .sort-btn {
+      background: var(--sort-bg);
+      border: 1.5px solid var(--card-border);
+      padding: 0.4rem 1rem;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.85rem; font-weight: 700;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+
+    .sort-btn:hover { color: var(--text); border-color: var(--accent); }
+
+    .sort-btn.active {
+      background: var(--sort-active-bg);
+      color: var(--sort-active-text);
+      border-color: var(--sort-active-bg);
+    }
+
+    /* ── MOVIE GRID ───────────────────────────────── */
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+      gap: 1.5rem;
+    }
+
+    /* ── MOVIE CARD ───────────────────────────────── */
+    .movie-card {
+      background: var(--card-bg);
+      box-shadow: 0 4px 16px var(--shadow);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.3s;
+      cursor: default;
+    }
+
+    .movie-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 14px 36px var(--shadow-hover);
+    }
+
+    .movie-card:hover .poster-wrap img {
+      transform: scale(1.07);
+    }
+
+    /* ── CARD PEEK (always visible) ───────────────── */
+    .card-peek {
+      padding: 0.9rem 1.1rem 0.7rem;
+    }
+
+    .card-title {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.97rem; font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .card-year { font-size: 0.8rem; color: var(--text-light); margin-top: 0.2rem; }
+
+    .card-rating { margin: 0.4rem 0 0.6rem; font-size: 0.88rem; letter-spacing: 1px; }
+
+    .expand-btn {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: var(--expand-btn-bg);
+      border: 1.5px solid var(--card-border);
+      padding: 0.28rem 0.85rem;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.78rem; font-weight: 700;
+      color: var(--label-color);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.15s;
+    }
+
+    .expand-btn:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      transform: scale(1.04);
+    }
+
+    /* ── CARD DETAILS (collapsible) ───────────────── */
+    .card-details {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.38s ease;
+      padding: 0 1.1rem;
+    }
+
+    .movie-card.expanded .card-details {
+      max-height: 400px;
+      padding-bottom: 1.1rem;
+    }
+
+    .card-label {
+      font-size: 0.66rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      color: var(--label-color);
+      margin-top: 0.75rem; margin-bottom: 0.2rem;
+    }
+
+    .card-note { font-size: 0.84rem; color: var(--text-light); line-height: 1.55; }
+
+    /* ── RANDOM BUTTON ────────────────────────────── */
+    .random-section { text-align: center; margin: 3rem 0; }
+    .random-hint { margin-bottom: 1rem; color: var(--text-light); font-size: 0.95rem; }
+
+    .random-btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      color: white; border: none;
+      padding: 1rem 2.8rem;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.1rem; font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.2);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .random-btn:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 6px 26px rgba(0,0,0,0.28); }
+    .random-btn:active { transform: translateY(0) scale(0.98); }
+
+    /* ── MODAL ────────────────────────────────────── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      align-items: center; justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: var(--modal-bg);
+      max-width: 380px; width: 100%;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      animation: modalIn 0.22s ease;
+      transition: background 0.3s;
+    }
+
+    @keyframes modalIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to   { transform: scale(1);    opacity: 1; }
+    }
+
+    .modal-poster-wrap {
+      width: 100%; height: 260px;
+      overflow: hidden; position: relative;
+      background: var(--placeholder);
+    }
+
+    .modal-poster-wrap .ph {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      color: var(--placeholder-text);
+      text-align: center; padding: 1rem;
+    }
+
+    .modal-poster-wrap img {
+      position: relative; z-index: 1;
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+
+    .modal-body { padding: 1.4rem; }
+
+    .modal-title {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.35rem; font-weight: 700; color: var(--text);
+    }
+
+    .modal-year  { color: var(--text-light); font-size: 0.88rem; margin-top: 0.2rem; }
+    .modal-rating { font-size: 1.15rem; margin: 0.55rem 0 0.3rem; }
+
+    .modal-comment { font-size: 0.93rem; color: var(--text-light); line-height: 1.65; margin-top: 0.4rem; }
+
+    .modal-close {
+      display: block; width: 100%; margin-top: 1.2rem; padding: 0.72rem;
+      background: var(--modal-close-bg);
+      border: 2px solid var(--card-border);
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.93rem; font-weight: 700; color: var(--text);
+      cursor: pointer; transition: background 0.15s;
+    }
+
+    .modal-close:hover { background: var(--modal-close-hover); }
+
+    /* ── FOOTER ───────────────────────────────────── */
+    footer {
+      background: var(--footer-bg);
+      text-align: center; padding: 2.2rem 1.5rem; color: var(--text);
+      position: relative; overflow: hidden;
+    }
+
+    .footer-text { font-family: 'Quicksand', sans-serif; font-size: 1.05rem; font-weight: 700; position: relative; z-index: 1; }
+    .footer-sub  { font-size: 0.82rem; color: var(--text-light); margin-top: 0.35rem; position: relative; z-index: 1; }
+
+    /* ── SUN (light mode) ─────────────────────────── */
+    .sun {
+      position: absolute;
+      top: 12%; right: 9%;
+      width: 62px; height: 62px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff7a0 0%, #ffe050 60%, #ffcc00 100%);
+      box-shadow: 0 0 0 8px rgba(255,220,50,0.18), 0 0 35px 16px rgba(255,200,0,0.28);
+      animation: sunGlow 3.5s ease-in-out infinite alternate;
+      z-index: 1;
+    }
+    .sun::before {
+      content: '';
+      position: absolute;
+      inset: -16px;
+      border-radius: 50%;
+      background: repeating-conic-gradient(
+        rgba(255,215,0,0.25) 0deg 14deg,
+        transparent 14deg 28deg
+      );
+      animation: sunSpin 9s linear infinite;
+    }
+    @keyframes sunGlow {
+      from { box-shadow: 0 0 0 6px rgba(255,220,50,0.14), 0 0 26px 13px rgba(255,200,0,0.22); }
+      to   { box-shadow: 0 0 0 12px rgba(255,220,50,0.24), 0 0 50px 25px rgba(255,200,0,0.36); }
+    }
+    @keyframes sunSpin { to { transform: rotate(360deg); } }
+    :root[data-theme="dark"] .sun { display: none; }
+
+    /* ── MOON (dark mode) ─────────────────────────── */
+    .moon {
+      position: absolute;
+      top: 12%; right: 9%;
+      width: 62px; height: 62px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 38%, #fffde8 0%, #ffeea8 55%, #ffe070 100%);
+      box-shadow:
+        0 0 0 2px rgba(255,240,160,0.3),
+        0 0 28px 14px rgba(255,235,120,0.22),
+        0 0 70px 35px rgba(255,230,100,0.10);
+      animation: moonGlow 4s ease-in-out infinite alternate;
+      z-index: 1;
+    }
+    @keyframes moonGlow {
+      from { box-shadow: 0 0 0 2px rgba(255,240,160,0.25), 0 0 22px 11px rgba(255,235,120,0.18), 0 0 55px 28px rgba(255,230,100,0.08); }
+      to   { box-shadow: 0 0 0 3px rgba(255,240,160,0.4),  0 0 38px 19px rgba(255,235,120,0.30), 0 0 90px 45px rgba(255,230,100,0.14); }
+    }
+    :root[data-theme="light"] .moon { display: none; }
+
+    /* ── ANIMATED SOOT SPRITES (hover effect) ─────── */
+    .soot-sprite {
+      position: absolute;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── STACKING ──────────────────────────────────── */
+    header { z-index: 1; }
+    main   { position: relative; z-index: 1; }
+    footer { position: relative; z-index: 1; }
+
+    /* ── BACKGROUND DECO LAYER ─────────────────────── */
+    .bg-deco {
+      position: fixed; inset: 0;
+      z-index: 0; pointer-events: none; overflow: hidden;
+    }
+
+    .bg-pond, .bg-forest { position: absolute; inset: 0; }
+    :root[data-theme="light"] .bg-pond   { display: none; }
+    :root[data-theme="dark"]  .bg-forest { display: none; }
+
+    .pond-group, .forest-group { position: absolute; }
+
+    .sway { display: block; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.16)); }
+
+    @keyframes pondSway  {
+      from { transform: rotate(-5deg); }
+      to   { transform: rotate(3deg);  }
+    }
+    @keyframes pondSwayR {
+      from { transform: rotate(4deg);  }
+      to   { transform: rotate(-4deg); }
+    }
+    @keyframes forestSway {
+      from { transform: rotate(-4deg) scaleX(0.97); }
+      to   { transform: rotate(3deg)  scaleX(1.03); }
+    }
+    @keyframes forestSwayR {
+      from { transform: rotate(3deg)  scaleX(1.03); }
+      to   { transform: rotate(-3deg) scaleX(0.97); }
+    }
+    @keyframes rayShimmer {
+      from { opacity: 1;   }
+      to   { opacity: 0.6; }
+    }
+
+    @media (max-width: 700px) { .bg-deco { opacity: 0.35; } }
+
+    /* ── RESPONSIVE ───────────────────────────────── */
+    @media (max-width: 900px) {
+      .top-picks-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 2.8rem 1rem 2.5rem; }
+      .intro  { padding: 1.4rem 1.5rem; }
+      .top-picks-grid { grid-template-columns: 1fr; }
+      .movie-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 400px) {
+      .movie-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── BACKGROUND DECORATION ─────────────────── -->
+  <div class="bg-deco" aria-hidden="true">
+
+    <!-- DARK MODE: lily pond (top-down view) -->
+    <div class="bg-pond">
+
+      <!-- #1 Left top: single large pad, tilted -25° -->
+      <div class="pond-group" data-depth="0.05" style="left:-60px;top:8vh;width:180px;opacity:0.48">
+        <div class="sway" style="animation:pondSway 6.1s ease-in-out infinite alternate;transform-origin:center center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 175 175">
+            <g transform="rotate(-25,88,88)">
+              <path d="M88,88 L95,16 C118,8 140,26 146,52 C152,78 142,108 120,120 C98,132 70,130 50,118 C30,106 20,80 28,54 C36,28 60,10 81,16 Z"
+                    fill="#1a5228" stroke="#0e3618" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M88,88 L88,16 M88,88 L132,28 M88,88 L146,72 M88,88 L124,122 M88,88 L88,130 M88,88 L50,122 M88,88 L28,68 M88,88 L42,28"
+                    stroke="#0e3618" stroke-width="1.1" fill="none" stroke-linecap="round" opacity="0.45"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- #2 Left mid: two overlapping pads, tilted +15°, large -->
+      <div class="pond-group" data-depth="0.08" style="left:-35px;top:32vh;width:260px;opacity:0.55">
+        <div class="sway" style="animation:pondSwayR 5.4s ease-in-out infinite alternate;animation-delay:0.9s;transform-origin:center center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 200">
+            <g transform="rotate(15,105,100)">
+              <path d="M105,100 L112,22 C136,14 158,32 164,60 C170,88 158,120 134,132 C110,144 80,142 58,128 C36,114 26,86 34,58 C42,30 68,12 97,22 Z"
+                    fill="#2a6e38" stroke="#1a4825" stroke-width="2.2" stroke-linejoin="round"/>
+              <path d="M105,100 L105,22 M105,100 L152,34 M105,100 L166,84 M105,100 L140,136 M105,100 L62,132 M105,100 L38,80 M105,100 L56,32"
+                    stroke="#1a4825" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.48"/>
+              <!-- Smaller second pad overlapping, notch left -->
+              <g transform="translate(118,90) scale(0.52)">
+                <path d="M80,78 L68,12 C44,5 22,22 14,48 C6,74 16,104 38,116 C60,128 88,126 110,112 C132,98 138,70 128,46 C118,22 96,8 82,12 Z"
+                      fill="#346630" stroke="#1e4420" stroke-width="2.5" stroke-linejoin="round" opacity="0.80"/>
+              </g>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- #3 Left lower: small pad + lotus, tilted -40° -->
+      <div class="pond-group" data-depth="0.12" style="left:2px;top:60vh;width:140px;opacity:0.45">
+        <div class="sway" style="animation:pondSway 4.8s ease-in-out infinite alternate;animation-delay:1.6s;transform-origin:center center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 220">
+            <g transform="rotate(-40,70,70)">
+              <path d="M70,70 L76,14 C96,6 116,22 120,44 C124,66 116,90 98,100 C80,110 58,108 42,96 C26,84 18,62 24,42 C30,22 50,8 66,14 Z"
+                    fill="#1e5530" stroke="#123520" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M70,70 L76,14 M70,70 L22,50 M70,70 L22,86 M70,70 L44,104 M70,70 L70,108 M70,70 L98,98 M70,70 L116,60"
+                    stroke="#123520" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.42"/>
+            </g>
+            <!-- Lotus -->
+            <g transform="translate(42,148)">
+              <path d="M28,28 C23,20 22,11 28,4 C34,11 33,20 28,28 Z" fill="#e8a0b0" stroke="#c87888" stroke-width="0.8" stroke-linejoin="round"/>
+              <path d="M28,28 C23,20 22,11 28,4 C34,11 33,20 28,28 Z" fill="#d49098" stroke="#c87888" stroke-width="0.8" stroke-linejoin="round" transform="rotate(45 28 28)"/>
+              <path d="M28,28 C23,20 22,11 28,4 C34,11 33,20 28,28 Z" fill="#e8a0b0" stroke="#c87888" stroke-width="0.8" stroke-linejoin="round" transform="rotate(90 28 28)"/>
+              <path d="M28,28 C23,20 22,11 28,4 C34,11 33,20 28,28 Z" fill="#d49098" stroke="#c87888" stroke-width="0.8" stroke-linejoin="round" transform="rotate(135 28 28)"/>
+              <path d="M28,28 C23,20 22,11 28,4 C34,11 33,20 28,28 Z" fill="#e8a0b0" stroke="#c87888" stroke-width="0.8" stroke-linejoin="round" transform="rotate(180 28 28)"/>
+              <path d="M28,28 C23,20 22,11 28,4 C34,11 33,20 28,28 Z" fill="#d49098" stroke="#c87888" stroke-width="0.8" stroke-linejoin="round" transform="rotate(225 28 28)"/>
+              <path d="M28,28 C23,20 22,11 28,4 C34,11 33,20 28,28 Z" fill="#e8a0b0" stroke="#c87888" stroke-width="0.8" stroke-linejoin="round" transform="rotate(270 28 28)"/>
+              <path d="M28,28 C23,20 22,11 28,4 C34,11 33,20 28,28 Z" fill="#d49098" stroke="#c87888" stroke-width="0.8" stroke-linejoin="round" transform="rotate(315 28 28)"/>
+              <circle cx="28" cy="28" r="9" fill="#f0c060"/>
+              <circle cx="28" cy="28" r="5.5" fill="#e09030"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- #4 Left bottom: tiny pad, tilted +60° -->
+      <div class="pond-group" data-depth="0.14" style="left:-20px;top:80vh;width:100px;opacity:0.38">
+        <div class="sway" style="animation:pondSwayR 7.1s ease-in-out infinite alternate;animation-delay:2.4s;transform-origin:center center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+            <g transform="rotate(60,60,60)">
+              <path d="M60,60 L65,12 C82,6 98,18 102,36 C106,54 98,76 82,84 C66,92 48,90 36,80 C24,70 18,52 22,36 C26,20 44,8 58,12 Z"
+                    fill="#3d7838" stroke="#265228" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M60,60 L65,12 M60,60 L20,44 M60,60 L18,74 M60,60 L36,90 M60,60 L82,88 M60,60 L104,62"
+                    stroke="#265228" stroke-width="0.9" fill="none" stroke-linecap="round" opacity="0.40"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- #5 Right top: large single pad, tilted +30° -->
+      <div class="pond-group" data-depth="0.06" style="right:-55px;top:14vh;width:220px;opacity:0.50">
+        <div class="sway" style="animation:pondSwayR 5.0s ease-in-out infinite alternate;animation-delay:0.4s;transform-origin:center center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 190">
+            <g transform="rotate(30,100,95)">
+              <path d="M100,95 L93,20 C68,12 44,30 38,58 C32,86 42,118 66,130 C90,142 120,140 142,126 C164,112 174,82 164,56 C154,30 128,14 107,20 Z"
+                    fill="#2a6e38" stroke="#1a4825" stroke-width="2.2" stroke-linejoin="round"/>
+              <path d="M100,95 L100,20 M100,95 L54,34 M100,95 L38,76 M100,95 L58,136 M100,95 L100,138 M100,95 L144,130 M100,95 L166,80 M100,95 L148,34"
+                    stroke="#1a4825" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.48"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- #6 Right mid: two pads (one small), tilted -15° -->
+      <div class="pond-group" data-depth="0.10" style="right:-28px;top:44vh;width:175px;opacity:0.52">
+        <div class="sway" style="animation:pondSway 6.6s ease-in-out infinite alternate;animation-delay:1.8s;transform-origin:center center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 175 175">
+            <g transform="rotate(-15,88,88)">
+              <path d="M88,88 L95,16 C118,8 140,26 146,52 C152,78 142,108 120,120 C98,132 70,130 50,118 C30,106 20,80 28,54 C36,28 60,10 81,16 Z"
+                    fill="#1e5530" stroke="#123520" stroke-width="2.2" stroke-linejoin="round"/>
+              <path d="M88,88 L88,16 M88,88 L132,28 M88,88 L146,72 M88,88 L124,122 M88,88 L50,122 M88,88 L28,68"
+                    stroke="#123520" stroke-width="1.1" fill="none" stroke-linecap="round" opacity="0.44"/>
+              <!-- Tiny second pad -->
+              <g transform="translate(38,52) scale(0.38)">
+                <path d="M80,78 L68,12 C44,5 22,22 14,48 C6,74 16,104 38,116 C60,128 88,126 110,112 C132,98 138,70 128,46 C118,22 96,8 82,12 Z"
+                      fill="#346630" stroke="#1e4420" stroke-width="2.5" stroke-linejoin="round" opacity="0.75"/>
+              </g>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- #7 Right lower: pad + lotus, tilted +50° -->
+      <div class="pond-group" data-depth="0.13" style="right:-10px;top:70vh;width:200px;opacity:0.50">
+        <div class="sway" style="animation:pondSwayR 5.2s ease-in-out infinite alternate;animation-delay:2.8s;transform-origin:center center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 185 250">
+            <g transform="rotate(50,88,88)">
+              <path d="M88,88 L80,14 C56,6 34,24 28,52 C22,80 32,112 56,124 C80,136 110,134 132,120 C154,106 160,76 150,50 C140,24 116,8 94,14 Z"
+                    fill="#1a5228" stroke="#0e3618" stroke-width="2.2" stroke-linejoin="round"/>
+              <path d="M88,88 L80,14 M88,88 L30,60 M88,88 L28,104 M88,88 L54,128 M88,88 L88,136 M88,88 L132,124 M88,88 L154,94 M88,88 L126,36"
+                    stroke="#0e3618" stroke-width="1.1" fill="none" stroke-linecap="round" opacity="0.42"/>
+            </g>
+            <!-- Lotus -->
+            <g transform="translate(58,170)">
+              <path d="M28,28 C23,20 22,11 28,4 C34,11 33,20 28,28 Z" fill="#e8a0b0" stroke="#c87888" stroke-width="0.8" stroke-linejoin="round"/>
+              <path d="M28,28 C23,20 22,11 28,4 C34,11 33,20 28,28 Z" fill="#d49098" stroke="#c87888" stroke-width="0.8" stroke-linejoin="round" transform="rotate(45 28 28)"/>
+              <path d="M28,28 C23,20 22,11 28,4 C34,11 33,20 28,28 Z" fill="#e8a0b0" stroke="#c87888" stroke-width="0.8" stroke-linejoin="round" transform="rotate(90 28 28)"/>
+              <path d="M28,28 C23,20 22,11 28,4 C34,11 33,20 28,28 Z" fill="#d49098" stroke="#c87888" stroke-width="0.8" stroke-linejoin="round" transform="rotate(135 28 28)"/>
+              <path d="M28,28 C23,20 22,11 28,4 C34,11 33,20 28,28 Z" fill="#e8a0b0" stroke="#c87888" stroke-width="0.8" stroke-linejoin="round" transform="rotate(180 28 28)"/>
+              <path d="M28,28 C23,20 22,11 28,4 C34,11 33,20 28,28 Z" fill="#d49098" stroke="#c87888" stroke-width="0.8" stroke-linejoin="round" transform="rotate(225 28 28)"/>
+              <path d="M28,28 C23,20 22,11 28,4 C34,11 33,20 28,28 Z" fill="#e8a0b0" stroke="#c87888" stroke-width="0.8" stroke-linejoin="round" transform="rotate(270 28 28)"/>
+              <path d="M28,28 C23,20 22,11 28,4 C34,11 33,20 28,28 Z" fill="#d49098" stroke="#c87888" stroke-width="0.8" stroke-linejoin="round" transform="rotate(315 28 28)"/>
+              <circle cx="28" cy="28" r="9" fill="#f0c060"/>
+              <circle cx="28" cy="28" r="5.5" fill="#e09030"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+    </div><!-- /.bg-pond -->
+
+    <!-- LIGHT MODE: sunlit forest looking up + daisy meadow -->
+    <div class="bg-forest">
+
+      <!-- Mid-left flowery hills -->
+      <div class="forest-group" data-depth="0.10" style="left:-28px;top:42vh;width:240px;opacity:0.50">
+        <div class="sway" style="animation:forestSway 6.5s ease-in-out infinite alternate;animation-delay:1s;transform-origin:bottom center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 200">
+            <!-- Back hill: darkest, no flowers -->
+            <path d="M0,200 C0,170 8,138 28,116 C16,96 20,72 38,58 C32,36 50,16 76,12 C92,2 118,4 136,20 C154,6 182,4 202,22 C222,40 228,68 216,90 C232,100 240,126 240,158 L240,200 Z"
+                  fill="#3e6818"/>
+            <!-- Mid hill -->
+            <path d="M0,200 C8,178 22,154 48,140 C34,118 40,94 62,82 C58,60 78,44 104,46 C120,34 148,36 166,54 C186,40 212,48 222,68 C232,88 228,112 212,128 C224,146 228,170 224,200 Z"
+                  fill="#5a8c2c"/>
+            <!-- Mid hill flowers: small blobs -->
+            <circle cx="46" cy="128" r="4" fill="#E8A0B8"/><circle cx="58" cy="120" r="3" fill="#C09AD8"/>
+            <circle cx="72" cy="112" r="4" fill="#E8C868"/><circle cx="84" cy="108" r="3" fill="#F09070"/>
+            <circle cx="98" cy="100" r="4" fill="#C8B8E8"/><circle cx="112" cy="96" r="3" fill="#E8A0B8"/>
+            <circle cx="128" cy="98" r="4" fill="#F09070"/><circle cx="142" cy="102" r="3" fill="#C09AD8"/>
+            <circle cx="158" cy="108" r="4" fill="#E8C868"/><circle cx="172" cy="116" r="3" fill="#E8A0B8"/>
+            <circle cx="188" cy="120" r="4" fill="#C8B8E8"/><circle cx="202" cy="126" r="3" fill="#F09070"/>
+            <!-- Front hill -->
+            <path d="M0,200 C10,188 28,174 54,168 C40,150 46,128 72,118 C68,100 88,88 116,92 C130,80 158,84 172,100 C192,86 218,98 228,120 C236,142 230,168 220,200 Z"
+                  fill="#7ab040"/>
+            <!-- Front hill flowers: larger, more colorful clusters -->
+            <circle cx="18" cy="174" r="6" fill="#F06888"/><circle cx="28" cy="166" r="5" fill="#F8F0E8"/>
+            <circle cx="38" cy="172" r="7" fill="#F09878"/><circle cx="50" cy="158" r="5" fill="#D4A8E8"/>
+            <circle cx="62" cy="148" r="6" fill="#F8E880"/><circle cx="72" cy="154" r="4" fill="#E890A8"/>
+            <circle cx="82" cy="140" r="7" fill="#F06888"/><circle cx="94" cy="132" r="5" fill="#B8E8C8"/>
+            <circle cx="104" cy="138" r="6" fill="#F87888"/><circle cx="116" cy="128" r="4" fill="#D4A8E8"/>
+            <circle cx="126" cy="122" r="7" fill="#F8E880"/><circle cx="138" cy="130" r="5" fill="#F09878"/>
+            <circle cx="150" cy="120" r="6" fill="#F06888"/><circle cx="162" cy="126" r="4" fill="#F8F0E8"/>
+            <circle cx="174" cy="132" r="7" fill="#E890A8"/><circle cx="186" cy="120" r="5" fill="#D4A8E8"/>
+            <circle cx="196" cy="128" r="6" fill="#F8E880"/><circle cx="208" cy="136" r="4" fill="#F09878"/>
+            <circle cx="218" cy="148" r="7" fill="#F06888"/><circle cx="226" cy="158" r="5" fill="#B8E8C8"/>
+            <!-- Leaf clusters (dark olive hand-shapes) -->
+            <path d="M56,150 C50,138 48,126 56,118 C60,112 66,114 68,122 C70,112 76,108 80,116 C84,124 82,138 76,148 Z" fill="#6a8018"/>
+            <path d="M130,124 C124,112 122,100 130,92 C134,86 140,88 142,96 C144,86 150,82 154,90 C158,98 156,112 150,122 Z" fill="#6a8018"/>
+            <path d="M192,118 C186,106 184,94 192,86 C196,80 202,82 204,90 C206,80 212,76 216,84 C220,92 218,106 212,116 Z" fill="#526010"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Mid-right flowery hills (mirrored) -->
+      <div class="forest-group" data-depth="0.10" style="right:-28px;top:42vh;width:240px;opacity:0.50">
+        <div class="sway" style="animation:forestSwayR 7s ease-in-out infinite alternate;animation-delay:2.5s;transform-origin:bottom center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 200">
+            <g transform="scale(-1,1) translate(-240,0)">
+              <path d="M0,200 C0,170 8,138 28,116 C16,96 20,72 38,58 C32,36 50,16 76,12 C92,2 118,4 136,20 C154,6 182,4 202,22 C222,40 228,68 216,90 C232,100 240,126 240,158 L240,200 Z"
+                    fill="#3e6818"/>
+              <path d="M0,200 C8,178 22,154 48,140 C34,118 40,94 62,82 C58,60 78,44 104,46 C120,34 148,36 166,54 C186,40 212,48 222,68 C232,88 228,112 212,128 C224,146 228,170 224,200 Z"
+                    fill="#5a8c2c"/>
+              <circle cx="46" cy="128" r="4" fill="#E8A0B8"/><circle cx="58" cy="120" r="3" fill="#C09AD8"/>
+              <circle cx="72" cy="112" r="4" fill="#E8C868"/><circle cx="84" cy="108" r="3" fill="#F09070"/>
+              <circle cx="98" cy="100" r="4" fill="#C8B8E8"/><circle cx="112" cy="96" r="3" fill="#E8A0B8"/>
+              <circle cx="128" cy="98" r="4" fill="#F09070"/><circle cx="142" cy="102" r="3" fill="#C09AD8"/>
+              <circle cx="158" cy="108" r="4" fill="#E8C868"/><circle cx="172" cy="116" r="3" fill="#E8A0B8"/>
+              <circle cx="188" cy="120" r="4" fill="#C8B8E8"/><circle cx="202" cy="126" r="3" fill="#F09070"/>
+              <path d="M0,200 C10,188 28,174 54,168 C40,150 46,128 72,118 C68,100 88,88 116,92 C130,80 158,84 172,100 C192,86 218,98 228,120 C236,142 230,168 220,200 Z"
+                    fill="#7ab040"/>
+              <circle cx="18" cy="174" r="6" fill="#F06888"/><circle cx="28" cy="166" r="5" fill="#F8F0E8"/>
+              <circle cx="38" cy="172" r="7" fill="#F09878"/><circle cx="50" cy="158" r="5" fill="#D4A8E8"/>
+              <circle cx="62" cy="148" r="6" fill="#F8E880"/><circle cx="72" cy="154" r="4" fill="#E890A8"/>
+              <circle cx="82" cy="140" r="7" fill="#F06888"/><circle cx="94" cy="132" r="5" fill="#B8E8C8"/>
+              <circle cx="104" cy="138" r="6" fill="#F87888"/><circle cx="116" cy="128" r="4" fill="#D4A8E8"/>
+              <circle cx="126" cy="122" r="7" fill="#F8E880"/><circle cx="138" cy="130" r="5" fill="#F09878"/>
+              <circle cx="150" cy="120" r="6" fill="#F06888"/><circle cx="162" cy="126" r="4" fill="#F8F0E8"/>
+              <circle cx="174" cy="132" r="7" fill="#E890A8"/><circle cx="186" cy="120" r="5" fill="#D4A8E8"/>
+              <circle cx="196" cy="128" r="6" fill="#F8E880"/><circle cx="208" cy="136" r="4" fill="#F09878"/>
+              <circle cx="218" cy="148" r="7" fill="#F06888"/><circle cx="226" cy="158" r="5" fill="#B8E8C8"/>
+              <path d="M56,150 C50,138 48,126 56,118 C60,112 66,114 68,122 C70,112 76,108 80,116 C84,124 82,138 76,148 Z" fill="#6a8018"/>
+              <path d="M130,124 C124,112 122,100 130,92 C134,86 140,88 142,96 C144,86 150,82 154,90 C158,98 156,112 150,122 Z" fill="#6a8018"/>
+              <path d="M192,118 C186,106 184,94 192,86 C196,80 202,82 204,90 C206,80 212,76 216,84 C220,92 218,106 212,116 Z" fill="#526010"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Left ground: plants + daisies -->
+      <div class="forest-group" data-depth="0.15" style="left:-18px;bottom:-12px;width:268px;opacity:0.48">
+        <div class="sway" style="animation:forestSway 5.5s ease-in-out infinite alternate;animation-delay:0.8s;transform-origin:bottom center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 248 188">
+            <!-- Ground foliage — organic blob layers -->
+            <path d="M0,188 C12,158 35,142 62,140 C46,120 44,98 62,88 C80,78 102,90 108,108 C124,92 148,90 166,104 C184,90 208,94 220,112 C236,100 250,112 254,130 L254,188 Z"
+                  fill="#5a9030" stroke="#46781e" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M18,172 C36,152 62,144 86,150 C72,132 74,112 94,104 C114,96 134,108 136,128 C154,114 180,116 194,134 C210,118 232,126 238,148 Z"
+                  fill="#72b040" stroke="#56901e" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M48,160 C65,146 90,140 112,148 C98,134 100,118 118,110 C136,102 154,116 154,136 C172,122 196,128 204,148 Z"
+                  fill="#8ec852" stroke="#6aac38" stroke-width="1.2" stroke-linejoin="round"/>
+            <!-- Daisies -->
+            <!-- Daisy 1 (large) -->
+            <g transform="translate(54,112)">
+              <path d="M14,14 C11,8 11,3 14,0 C17,3 17,8 14,14 Z" fill="white" stroke="#e0dcc0" stroke-width="0.6" stroke-linejoin="round"/>
+              <path d="M14,14 C11,8 11,3 14,0 C17,3 17,8 14,14 Z" fill="white" stroke="#e0dcc0" stroke-width="0.6" stroke-linejoin="round" transform="rotate(45 14 14)"/>
+              <path d="M14,14 C11,8 11,3 14,0 C17,3 17,8 14,14 Z" fill="white" stroke="#e0dcc0" stroke-width="0.6" stroke-linejoin="round" transform="rotate(90 14 14)"/>
+              <path d="M14,14 C11,8 11,3 14,0 C17,3 17,8 14,14 Z" fill="white" stroke="#e0dcc0" stroke-width="0.6" stroke-linejoin="round" transform="rotate(135 14 14)"/>
+              <path d="M14,14 C11,8 11,3 14,0 C17,3 17,8 14,14 Z" fill="white" stroke="#e0dcc0" stroke-width="0.6" stroke-linejoin="round" transform="rotate(180 14 14)"/>
+              <path d="M14,14 C11,8 11,3 14,0 C17,3 17,8 14,14 Z" fill="white" stroke="#e0dcc0" stroke-width="0.6" stroke-linejoin="round" transform="rotate(225 14 14)"/>
+              <path d="M14,14 C11,8 11,3 14,0 C17,3 17,8 14,14 Z" fill="white" stroke="#e0dcc0" stroke-width="0.6" stroke-linejoin="round" transform="rotate(270 14 14)"/>
+              <path d="M14,14 C11,8 11,3 14,0 C17,3 17,8 14,14 Z" fill="white" stroke="#e0dcc0" stroke-width="0.6" stroke-linejoin="round" transform="rotate(315 14 14)"/>
+              <circle cx="14" cy="14" r="6" fill="#f5d040"/>
+              <circle cx="14" cy="14" r="3.8" fill="#e8a020"/>
+            </g>
+            <!-- Daisy 2 (smaller) -->
+            <g transform="translate(128,94)">
+              <path d="M11,11 C9,6 9,2 11,0 C13,2 13,6 11,11 Z" fill="white" stroke="#e0dcc0" stroke-width="0.5" stroke-linejoin="round"/>
+              <path d="M11,11 C9,6 9,2 11,0 C13,2 13,6 11,11 Z" fill="white" stroke="#e0dcc0" stroke-width="0.5" stroke-linejoin="round" transform="rotate(45 11 11)"/>
+              <path d="M11,11 C9,6 9,2 11,0 C13,2 13,6 11,11 Z" fill="white" stroke="#e0dcc0" stroke-width="0.5" stroke-linejoin="round" transform="rotate(90 11 11)"/>
+              <path d="M11,11 C9,6 9,2 11,0 C13,2 13,6 11,11 Z" fill="white" stroke="#e0dcc0" stroke-width="0.5" stroke-linejoin="round" transform="rotate(135 11 11)"/>
+              <path d="M11,11 C9,6 9,2 11,0 C13,2 13,6 11,11 Z" fill="white" stroke="#e0dcc0" stroke-width="0.5" stroke-linejoin="round" transform="rotate(180 11 11)"/>
+              <path d="M11,11 C9,6 9,2 11,0 C13,2 13,6 11,11 Z" fill="white" stroke="#e0dcc0" stroke-width="0.5" stroke-linejoin="round" transform="rotate(225 11 11)"/>
+              <path d="M11,11 C9,6 9,2 11,0 C13,2 13,6 11,11 Z" fill="white" stroke="#e0dcc0" stroke-width="0.5" stroke-linejoin="round" transform="rotate(270 11 11)"/>
+              <path d="M11,11 C9,6 9,2 11,0 C13,2 13,6 11,11 Z" fill="white" stroke="#e0dcc0" stroke-width="0.5" stroke-linejoin="round" transform="rotate(315 11 11)"/>
+              <circle cx="11" cy="11" r="5" fill="#f5d040"/>
+              <circle cx="11" cy="11" r="3" fill="#e8a020"/>
+            </g>
+            <!-- Daisy 3 (floating, mid size) -->
+            <g transform="translate(172,78)">
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round"/>
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round" transform="rotate(36 13 13)"/>
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round" transform="rotate(72 13 13)"/>
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round" transform="rotate(108 13 13)"/>
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round" transform="rotate(144 13 13)"/>
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round" transform="rotate(180 13 13)"/>
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round" transform="rotate(216 13 13)"/>
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round" transform="rotate(252 13 13)"/>
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round" transform="rotate(288 13 13)"/>
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round" transform="rotate(324 13 13)"/>
+              <circle cx="13" cy="13" r="5.5" fill="#f5d040"/>
+              <circle cx="13" cy="13" r="3.2" fill="#e8a020"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Right ground: plants + daisies (mirrored) -->
+      <div class="forest-group" data-depth="0.15" style="right:-18px;bottom:-12px;width:268px;opacity:0.48">
+        <div class="sway" style="animation:forestSwayR 6s ease-in-out infinite alternate;animation-delay:2.2s;transform-origin:bottom center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 248 188">
+            <path d="M248,188 C236,158 213,142 186,140 C202,120 204,98 186,88 C168,78 146,90 140,108 C124,92 100,90 82,104 C64,90 40,94 28,112 C12,100 -2,112 -6,130 L-6,188 Z"
+                  fill="#5a9030" stroke="#46781e" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M230,172 C212,152 186,144 162,150 C176,132 174,112 154,104 C134,96 114,108 112,128 C94,114 68,116 54,134 C38,118 16,126 10,148 Z"
+                  fill="#72b040" stroke="#56901e" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M200,160 C183,146 158,140 136,148 C150,134 148,118 130,110 C112,102 94,116 94,136 C76,122 52,128 44,148 Z"
+                  fill="#8ec852" stroke="#6aac38" stroke-width="1.2" stroke-linejoin="round"/>
+            <!-- Daisies (right side) -->
+            <g transform="translate(158,108)">
+              <path d="M14,14 C11,8 11,3 14,0 C17,3 17,8 14,14 Z" fill="white" stroke="#e0dcc0" stroke-width="0.6" stroke-linejoin="round"/>
+              <path d="M14,14 C11,8 11,3 14,0 C17,3 17,8 14,14 Z" fill="white" stroke="#e0dcc0" stroke-width="0.6" stroke-linejoin="round" transform="rotate(45 14 14)"/>
+              <path d="M14,14 C11,8 11,3 14,0 C17,3 17,8 14,14 Z" fill="white" stroke="#e0dcc0" stroke-width="0.6" stroke-linejoin="round" transform="rotate(90 14 14)"/>
+              <path d="M14,14 C11,8 11,3 14,0 C17,3 17,8 14,14 Z" fill="white" stroke="#e0dcc0" stroke-width="0.6" stroke-linejoin="round" transform="rotate(135 14 14)"/>
+              <path d="M14,14 C11,8 11,3 14,0 C17,3 17,8 14,14 Z" fill="white" stroke="#e0dcc0" stroke-width="0.6" stroke-linejoin="round" transform="rotate(180 14 14)"/>
+              <path d="M14,14 C11,8 11,3 14,0 C17,3 17,8 14,14 Z" fill="white" stroke="#e0dcc0" stroke-width="0.6" stroke-linejoin="round" transform="rotate(225 14 14)"/>
+              <path d="M14,14 C11,8 11,3 14,0 C17,3 17,8 14,14 Z" fill="white" stroke="#e0dcc0" stroke-width="0.6" stroke-linejoin="round" transform="rotate(270 14 14)"/>
+              <path d="M14,14 C11,8 11,3 14,0 C17,3 17,8 14,14 Z" fill="white" stroke="#e0dcc0" stroke-width="0.6" stroke-linejoin="round" transform="rotate(315 14 14)"/>
+              <circle cx="14" cy="14" r="6" fill="#f5d040"/>
+              <circle cx="14" cy="14" r="3.8" fill="#e8a020"/>
+            </g>
+            <g transform="translate(82,92)">
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round"/>
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round" transform="rotate(36 13 13)"/>
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round" transform="rotate(72 13 13)"/>
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round" transform="rotate(108 13 13)"/>
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round" transform="rotate(144 13 13)"/>
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round" transform="rotate(180 13 13)"/>
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round" transform="rotate(216 13 13)"/>
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round" transform="rotate(252 13 13)"/>
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round" transform="rotate(288 13 13)"/>
+              <path d="M13,13 C10,7 10,2 13,0 C16,2 16,7 13,13 Z" fill="white" stroke="#e8e4c8" stroke-width="0.5" stroke-linejoin="round" transform="rotate(324 13 13)"/>
+              <circle cx="13" cy="13" r="5.5" fill="#f5d040"/>
+              <circle cx="13" cy="13" r="3.2" fill="#e8a020"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+    </div><!-- /.bg-forest -->
+
+  </div><!-- /.bg-deco -->
+
+  <header>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+      <span id="themeIcon"></span><span id="themeLabel"></span>
+    </button>
+
+    <div class="moon" aria-hidden="true"></div>
+    <div class="sun"  aria-hidden="true"></div>
+
+    <!-- Decorative candy stars (spiky 5–8 pointed only) -->
+    <span class="deco-star" style="left:4%;top:18%;font-size:11px;color:#FFB3C6;--dur:3.8s;--delay:0s">✶</span>
+    <span class="deco-star" style="left:12%;top:55%;font-size:8px;color:#B5EAD7;--dur:4.5s;--delay:0.6s">★</span>
+    <span class="deco-star" style="left:7%;top:72%;font-size:13px;color:#FFDAC1;--dur:3.2s;--delay:1.1s">✸</span>
+    <span class="deco-star" style="left:19%;top:38%;font-size:9px;color:#D4F1F9;--dur:5s;--delay:0.3s">✭</span>
+    <span class="deco-star" style="left:22%;top:80%;font-size:7px;color:#FFF9C4;--dur:4.2s;--delay:1.8s">★</span>
+    <span class="deco-star" style="right:4%;top:15%;font-size:9px;color:#FFD1DC;--dur:4.8s;--delay:0.4s">✷</span>
+    <span class="deco-star" style="right:11%;top:50%;font-size:13px;color:#B5EAD7;--dur:3.5s;--delay:0.9s">✴</span>
+    <span class="deco-star" style="right:7%;top:72%;font-size:8px;color:#C7CEEA;--dur:4.1s;--delay:1.5s">✶</span>
+    <span class="deco-star" style="right:20%;top:35%;font-size:11px;color:#FFDAC1;--dur:3.9s;--delay:0.2s">★</span>
+    <span class="deco-star" style="right:24%;top:78%;font-size:7px;color:#FFF9C4;--dur:5.2s;--delay:1.3s">✸</span>
+
+    <!-- Decorative soot sprites (SVG, matching hover design) -->
+    <div class="header-soot" style="width:34px;height:34px;left:9%;top:40%;--sdur:3.8s;--sbdur:3.2s;--sdelay:0.5s;--sscale:1">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="100%" height="100%">
+        <path fill="#161616" d="M30 4 L33 11 L38 6 L37 13 L44 11 L40 17 L48 17 L43 22 L51 25 L43 27 L47 33 L40 30 L42 38 L35 34 L34 42 L30 37 L26 42 L25 34 L18 38 L20 30 L13 33 L17 27 L9 25 L17 22 L12 17 L20 17 L16 11 L23 13 L22 6 L27 11 Z"/>
+        <circle cx="22" cy="25" r="8.5" fill="white"/><circle cx="38" cy="25" r="8.5" fill="white"/>
+        <circle cx="23" cy="26" r="5" fill="#0d0d0d"/><circle cx="39" cy="26" r="5" fill="#0d0d0d"/>
+        <circle cx="25" cy="23" r="2" fill="white"/><circle cx="41" cy="23" r="2" fill="white"/>
+      </svg>
+    </div>
+    <div class="header-soot" style="width:24px;height:24px;left:16%;top:66%;--sdur:4.5s;--sbdur:4s;--sdelay:1.2s;--sscale:0.85">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="100%" height="100%">
+        <path fill="#161616" d="M30 4 L33 11 L38 6 L37 13 L44 11 L40 17 L48 17 L43 22 L51 25 L43 27 L47 33 L40 30 L42 38 L35 34 L34 42 L30 37 L26 42 L25 34 L18 38 L20 30 L13 33 L17 27 L9 25 L17 22 L12 17 L20 17 L16 11 L23 13 L22 6 L27 11 Z"/>
+        <circle cx="22" cy="25" r="8.5" fill="white"/><circle cx="38" cy="25" r="8.5" fill="white"/>
+        <circle cx="23" cy="26" r="5" fill="#0d0d0d"/><circle cx="39" cy="26" r="5" fill="#0d0d0d"/>
+        <circle cx="25" cy="23" r="2" fill="white"/><circle cx="41" cy="23" r="2" fill="white"/>
+      </svg>
+    </div>
+    <div class="header-soot" style="width:28px;height:28px;right:14%;top:58%;--sdur:4.1s;--sbdur:3.6s;--sdelay:0.8s;--sscale:0.9">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="100%" height="100%">
+        <path fill="#161616" d="M30 4 L33 11 L38 6 L37 13 L44 11 L40 17 L48 17 L43 22 L51 25 L43 27 L47 33 L40 30 L42 38 L35 34 L34 42 L30 37 L26 42 L25 34 L18 38 L20 30 L13 33 L17 27 L9 25 L17 22 L12 17 L20 17 L16 11 L23 13 L22 6 L27 11 Z"/>
+        <circle cx="22" cy="25" r="8.5" fill="white"/><circle cx="38" cy="25" r="8.5" fill="white"/>
+        <circle cx="23" cy="26" r="5" fill="#0d0d0d"/><circle cx="39" cy="26" r="5" fill="#0d0d0d"/>
+        <circle cx="25" cy="23" r="2" fill="white"/><circle cx="41" cy="23" r="2" fill="white"/>
+      </svg>
+    </div>
+    <div class="header-soot" style="width:40px;height:40px;right:8%;top:38%;--sdur:3.2s;--sbdur:2.9s;--sdelay:1.8s;--sscale:1.1">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="100%" height="100%">
+        <path fill="#161616" d="M30 4 L33 11 L38 6 L37 13 L44 11 L40 17 L48 17 L43 22 L51 25 L43 27 L47 33 L40 30 L42 38 L35 34 L34 42 L30 37 L26 42 L25 34 L18 38 L20 30 L13 33 L17 27 L9 25 L17 22 L12 17 L20 17 L16 11 L23 13 L22 6 L27 11 Z"/>
+        <circle cx="22" cy="25" r="8.5" fill="white"/><circle cx="38" cy="25" r="8.5" fill="white"/>
+        <circle cx="23" cy="26" r="5" fill="#0d0d0d"/><circle cx="39" cy="26" r="5" fill="#0d0d0d"/>
+        <circle cx="25" cy="23" r="2" fill="white"/><circle cx="41" cy="23" r="2" fill="white"/>
+      </svg>
+    </div>
+
+    <h1 class="site-title">aja's big ghibli list</h1>
+    <p class="site-subtitle">movies i love and recommend to my friends</p>
+  </header>
+
+  <main>
+
+    <section class="intro" aria-label="Introduction">
+      <p>hi! i made this page to share the studio ghibli films i love most and help my friends figure out which one to watch next. whether you're completely new to ghibli or looking for your next favorite, i hope you find something here.</p>
+      <p>each card has my honest thoughts and why i think you should give it a watch — click <strong>✦ read more</strong> on any card to see my notes. and if you still can't decide, hit the button below to let fate choose for you!</p>
+    </section>
+
+    <!-- TOP PICKS -->
+    <section class="top-picks" aria-labelledby="top-picks-heading">
+      <h2 class="section-title" id="top-picks-heading">✨ my top picks</h2>
+      <div class="top-picks-grid">
+
+        <article class="top-card" tabindex="0">
+          <span class="top-badge">aja's favs</span>
+          <div class="poster-wrap">
+            <div class="ph">The Secret World of Arrietty</div>
+            <img src="https://upload.wikimedia.org/wikipedia/en/e/e7/Karigurashi_no_Arrietty_poster.png"
+                 alt="The Secret World of Arrietty movie poster" onerror="this.remove()" />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">The Secret World of Arrietty</h3>
+            <p class="card-year">2010</p>
+            <p class="card-rating">⭐⭐⭐⭐⭐</p>
+            <p class="card-note">tiny people living beneath a family's floorboards — the world-building is incredible and every little detail is lovingly crafted. it makes the ordinary world feel magical and vast.</p>
+          </div>
+        </article>
+
+        <article class="top-card" tabindex="0">
+          <span class="top-badge">aja's favs</span>
+          <div class="poster-wrap">
+            <div class="ph">Howl's Moving Castle</div>
+            <img src="https://upload.wikimedia.org/wikipedia/en/a/a0/Howls-moving-castleposter.jpg"
+                 alt="Howl's Moving Castle movie poster" onerror="this.remove()" />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Howl's Moving Castle</h3>
+            <p class="card-year">2004</p>
+            <p class="card-rating">⭐⭐⭐⭐⭐</p>
+            <p class="card-note">a girl cursed to look old finds refuge in a wizard's magical moving castle. romantic, dreamy, and visually gorgeous — sophie's quiet inner strength is everything.</p>
+          </div>
+        </article>
+
+        <article class="top-card" tabindex="0">
+          <span class="top-badge">aja's favs</span>
+          <div class="poster-wrap">
+            <div class="ph">Kiki's Delivery Service</div>
+            <img src="https://upload.wikimedia.org/wikipedia/en/0/07/Kiki%27s_Delivery_Service_%28Movie%29.jpg"
+                 alt="Kiki's Delivery Service movie poster" onerror="this.remove()" />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Kiki's Delivery Service</h3>
+            <p class="card-year">1989</p>
+            <p class="card-rating">⭐⭐⭐⭐⭐</p>
+            <p class="card-note">a young witch finds her way in a new city. this film is all about independence, self-doubt, and rediscovering your creative spark. i always come back to this one.</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- RANDOM PICK -->
+    <section class="random-section" aria-label="Random movie picker">
+      <p class="random-hint">can't decide what to watch?</p>
+      <button class="random-btn" onclick="pickRandom()">✨ pick a random ghibli movie</button>
+    </section>
+
+    <!-- ALL MOVIES -->
+    <section class="all-movies" aria-labelledby="all-movies-heading">
+      <h2 class="section-title" id="all-movies-heading">all my recommendations</h2>
+
+      <div class="sort-bar" role="group" aria-label="Sort movies">
+        <span class="sort-label">sort by</span>
+        <button class="sort-btn active" onclick="setSort('oldest')" id="sort-oldest">oldest first</button>
+        <button class="sort-btn"        onclick="setSort('newest')" id="sort-newest">newest first</button>
+        <button class="sort-btn"        onclick="setSort('rating')" id="sort-rating">highest rated</button>
+      </div>
+
+      <div class="movie-grid" id="movieGrid"></div>
+    </section>
+
+  </main>
+
+  <footer>
+    <!-- Decorative candy stars in footer -->
+    <span class="deco-star" style="left:8%;top:25%;font-size:10px;color:#FFB3C6;--dur:3.5s;--delay:0.3s;opacity:0.5">✷</span>
+    <span class="deco-star" style="left:18%;top:60%;font-size:7px;color:#B5EAD7;--dur:4.2s;--delay:1s;opacity:0.5">★</span>
+    <span class="deco-star" style="right:10%;top:30%;font-size:9px;color:#D4F1F9;--dur:3.8s;--delay:0.6s;opacity:0.5">✶</span>
+    <span class="deco-star" style="right:20%;top:65%;font-size:8px;color:#FFDAC1;--dur:4.6s;--delay:1.4s;opacity:0.5">★</span>
+    <p class="footer-text">made with love for my friends ♡</p>
+    <p class="footer-sub">all films by studio ghibli</p>
+  </footer>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true"
+       aria-labelledby="modalTitle" onclick="handleOverlayClick(event)">
+    <div class="modal">
+      <div class="modal-poster-wrap" id="modalPosterWrap"></div>
+      <div class="modal-body">
+        <h2 class="modal-title"   id="modalTitle"></h2>
+        <p  class="modal-year"    id="modalYear"></p>
+        <p  class="modal-rating"  id="modalRating"></p>
+        <p  class="modal-comment" id="modalComment"></p>
+        <button class="modal-close" onclick="closeModal()">close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── MOVIES DATA ────────────────────────────────
+    const movies = [
+      {
+        title: "Kiki's Delivery Service", year: 1989, stars: 5,
+        poster: "https://upload.wikimedia.org/wikipedia/en/0/07/Kiki%27s_Delivery_Service_%28Movie%29.jpg",
+        thoughts: "a young witch finds her way in a new city — all about independence, self-doubt, and finding your creative spark again.",
+        recommend: "if you've ever felt lost or unsure of yourself, kiki's journey will feel so personal and encouraging."
+      },
+      {
+        title: "Porco Rosso", year: 1992, stars: 4,
+        poster: "https://upload.wikimedia.org/wikipedia/en/f/fc/Porco_Rosso_%28Movie_Poster%29.jpg",
+        thoughts: "a world-weary pilot who's been turned into a pig flies around the adriatic. melancholic and surprisingly funny.",
+        recommend: "one of miyazaki's most personal films. the vibe is completely unique — like jazz and nostalgia in movie form."
+      },
+      {
+        title: "Pom Poko", year: 1994, stars: 4,
+        poster: "https://upload.wikimedia.org/wikipedia/en/6/68/Pompokoposter.jpg",
+        thoughts: "a wild, funny, and surprisingly heartbreaking story about raccoon dogs fighting to save their forest.",
+        recommend: "it's unlike anything else ghibli made — hilarious and then suddenly devastating. unforgettable."
+      },
+      {
+        title: "Whisper of the Heart", year: 1995, stars: 5,
+        poster: "https://upload.wikimedia.org/wikipedia/en/9/93/Whisper_of_the_Heart_%28Movie_Poster%29.jpg",
+        thoughts: "a girl discovers her love of writing while chasing a mysterious boy she keeps running into at the library.",
+        recommend: "the most grounded and human ghibli film. perfect for anyone who loves books, art, or has ever had a dream."
+      },
+      {
+        title: "Spirited Away", year: 2001, stars: 5,
+        poster: "https://upload.wikimedia.org/wikipedia/en/d/db/Spirited_Away_Japanese_poster.png",
+        thoughts: "a girl gets trapped in a spirit world and must work to save her parents. visually stunning and deeply imaginative.",
+        recommend: "the most famous ghibli film for a reason — it's a masterpiece. watch it first if you're new to ghibli."
+      },
+      {
+        title: "Howl's Moving Castle", year: 2004, stars: 5,
+        poster: "https://upload.wikimedia.org/wikipedia/en/a/a0/Howls-moving-castleposter.jpg",
+        thoughts: "a girl cursed to look old finds refuge in a wizard's magical moving castle. romantic, dreamy, and visually gorgeous.",
+        recommend: "sophie's inner strength is so quietly powerful. the castle, calcifer, the war — everything is magical."
+      },
+      {
+        title: "Ponyo", year: 2008, stars: 4,
+        poster: "https://upload.wikimedia.org/wikipedia/en/5/51/Ponyo.png",
+        thoughts: "a little fish-girl wants to become human to stay with a boy she met on the shore. joyful and completely charming.",
+        recommend: "the most childlike and pure ghibli film. perfect for when you need pure, uncomplicated joy in your life."
+      },
+      {
+        title: "The Secret World of Arrietty", year: 2010, stars: 5,
+        poster: "https://upload.wikimedia.org/wikipedia/en/e/e7/Karigurashi_no_Arrietty_poster.png",
+        thoughts: "tiny people living beneath a family's floorboards — the world-building is incredible and every tiny detail is lovingly crafted.",
+        recommend: "it makes the mundane world feel magical and vast. one of the most beautifully designed ghibli films."
+      },
+      {
+        title: "From Up on Poppy Hill", year: 2011, stars: 4,
+        poster: "https://upload.wikimedia.org/wikipedia/en/c/c9/From_Up_on_Poppy_Hill.png",
+        thoughts: "a girl and boy work together to save their school's clubhouse while uncovering a complicated family secret.",
+        recommend: "understated and sweet — a quieter ghibli film about history, community, and gentle first love."
+      },
+      {
+        title: "The Wind Rises", year: 2013, stars: 5,
+        poster: "https://upload.wikimedia.org/wikipedia/en/a/a3/Kaze_Tachinu_poster.jpg",
+        thoughts: "a fictionalized life of the engineer who designed the zero fighter plane. beautiful, melancholic, and deeply personal.",
+        recommend: "miyazaki's farewell to animation (at the time). if you want something more adult and reflective, this is it."
+      },
+      {
+        title: "The Boy and the Heron", year: 2023, stars: 5,
+        poster: "https://upload.wikimedia.org/wikipedia/en/4/41/How_Do_You_Live_poster.jpg",
+        thoughts: "a boy is drawn into a mysterious tower and an otherworldly realm after losing his mother. surreal and deeply layered.",
+        recommend: "miyazaki's grand return after a decade — dense and personal. best appreciated after seeing other ghibli films first."
+      }
+    ];
+
+    // ── SOOT SPRITE SPAWNER ────────────────────────
+    const sootSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="100%" height="100%">
+      <path fill="#161616" d="M30 4 L33 11 L38 6 L37 13 L44 11 L40 17 L48 17 L43 22 L51 25 L43 27 L47 33 L40 30 L42 38 L35 34 L34 42 L30 37 L26 42 L25 34 L18 38 L20 30 L13 33 L17 27 L9 25 L17 22 L12 17 L20 17 L16 11 L23 13 L22 6 L27 11 Z"/>
+      <circle cx="22" cy="25" r="8.5" fill="white"/>
+      <circle cx="38" cy="25" r="8.5" fill="white"/>
+      <circle cx="23" cy="26" r="5"   fill="#0d0d0d"/>
+      <circle cx="39" cy="26" r="5"   fill="#0d0d0d"/>
+      <circle cx="25" cy="23" r="2"   fill="white"/>
+      <circle cx="41" cy="23" r="2"   fill="white"/>
+    </svg>`;
+
+    function spawnSootSprites(rect) {
+      for (let i = 0; i < 6; i++) {
+        const s = document.createElement('div');
+        s.className = 'soot-sprite';
+
+        const size = 26 + Math.random() * 18;
+        s.style.width  = size + 'px';
+        s.style.height = size + 'px';
+        s.innerHTML = sootSVG;
+
+        const x = rect.left + Math.random() * rect.width  + window.scrollX;
+        const y = rect.top  + Math.random() * rect.height * 0.7 + window.scrollY;
+        s.style.left = x + 'px';
+        s.style.top  = y + 'px';
+
+        document.body.appendChild(s);
+
+        const angle = Math.random() * 360;
+        const dist  = 45 + Math.random() * 60;
+        const dx = Math.cos(angle * Math.PI / 180) * dist;
+        const dy = Math.sin(angle * Math.PI / 180) * dist - 18;
+
+        const anim = s.animate([
+          { transform: 'translate(0,0) scale(1)',                opacity: 1 },
+          { transform: `translate(${dx}px,${dy}px) scale(0.2)`, opacity: 0 }
+        ], {
+          duration: 500 + i * 90,
+          delay:    i * 65,
+          easing:   'ease-out',
+          fill:     'forwards'
+        });
+
+        anim.onfinish = () => s.remove();
+      }
+    }
+
+    // ── EXPAND / COLLAPSE ──────────────────────────
+    function toggleCard(btn) {
+      const card = btn.closest('.movie-card');
+      const expanded = card.classList.toggle('expanded');
+      btn.textContent = expanded ? '✦ close' : '✦ read more';
+    }
+
+    // ── RENDER GRID ────────────────────────────────
+    let currentSort = 'oldest';
+
+    function starsToEmoji(n) { return '⭐'.repeat(n); }
+
+    function renderGrid() {
+      const sorted = [...movies].sort((a, b) => {
+        if (currentSort === 'oldest') return a.year - b.year;
+        if (currentSort === 'newest') return b.year - a.year;
+        if (currentSort === 'rating') return b.stars - a.stars || a.year - b.year;
+      });
+
+      const grid = document.getElementById('movieGrid');
+      grid.innerHTML = sorted.map(m => `
+        <article class="movie-card" tabindex="0">
+          <div class="poster-wrap">
+            <div class="ph">${m.title}</div>
+            <img src="${m.poster}" alt="${m.title} poster" onerror="this.remove()" />
+          </div>
+          <div class="card-peek">
+            <h3 class="card-title">${m.title}</h3>
+            <p class="card-year">${m.year}</p>
+            <p class="card-rating">${starsToEmoji(m.stars)}</p>
+            <button class="expand-btn" onclick="toggleCard(this)">✦ read more</button>
+          </div>
+          <div class="card-details">
+            <p class="card-label">my thoughts</p>
+            <p class="card-note">${m.thoughts}</p>
+            <p class="card-label">why i recommend it</p>
+            <p class="card-note">${m.recommend}</p>
+          </div>
+        </article>
+      `).join('');
+
+      // Attach soot sprite effect to each card (throttled per card)
+      grid.querySelectorAll('.movie-card').forEach(card => {
+        card.addEventListener('mouseenter', function () {
+          const now = Date.now();
+          if (now - (this._lastSprite || 0) < 900) return;
+          this._lastSprite = now;
+          spawnSootSprites(this.getBoundingClientRect());
+        });
+      });
+    }
+
+    function setSort(type) {
+      currentSort = type;
+      document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('sort-' + type).classList.add('active');
+      renderGrid();
+    }
+
+    renderGrid();
+
+    // ── RANDOM PICKER ──────────────────────────────
+    function pickRandom() {
+      const m    = movies[Math.floor(Math.random() * movies.length)];
+      const wrap = document.getElementById('modalPosterWrap');
+
+      document.getElementById('modalTitle').textContent   = m.title;
+      document.getElementById('modalYear').textContent    = m.year;
+      document.getElementById('modalRating').textContent  = starsToEmoji(m.stars);
+      document.getElementById('modalComment').textContent = m.thoughts + ' ' + m.recommend;
+
+      wrap.innerHTML = `<div class="ph">${m.title}</div><img src="${m.poster}" alt="${m.title} poster" onerror="this.remove()" />`;
+
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function handleOverlayClick(e) {
+      if (e.target === document.getElementById('modalOverlay')) closeModal();
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // ── THEME ──────────────────────────────────────
+    const themeIcon  = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      themeIcon.textContent  = theme === 'dark' ? '☀️' : '🌙';
+      themeLabel.textContent = theme === 'dark' ? 'light mode' : 'dark mode';
+      localStorage.setItem('ghibli-theme', theme);
+    }
+
+    function toggleTheme() {
+      applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    }
+
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    themeIcon.textContent  = currentTheme === 'dark' ? '☀️' : '🌙';
+    themeLabel.textContent = currentTheme === 'dark' ? 'light mode' : 'dark mode';
+
+    // ── PARALLAX SCROLL ────────────────────────────
+    (() => {
+      const elems = document.querySelectorAll('[data-depth]');
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          const sy = window.scrollY;
+          elems.forEach(el => {
+            el.style.transform = `translateY(${sy * parseFloat(el.dataset.depth)}px)`;
+          });
+          ticking = false;
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
